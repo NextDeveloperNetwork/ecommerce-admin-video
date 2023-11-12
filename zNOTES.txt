@@ -1,0 +1,72 @@
+npx create-next-app@latest my-app --typescript --tailwind --eslint
+
+npx shadcn-ui@latest init
+
+npx shadcn-ui@lates add button
+
+npm install @clerk/nextjs
+
+npx shadcn-ui@latest add dialog
+
+npm install zustand
+
+npx shadcn-ui@latest add form
+
+px shadcn-ui@latest add input
+
+npm i -D prisma 
+
+npm install @prisma/client
+
+npx prisma init
+
+           {/*npx prisma generate
+
+            npx prisma migrate dev --name init
+
+            npx prisma studio}
+
+            Next steps:
+
+1. Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started     
+2. Set the provider of the datasource block in schema.prisma to match your database: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb.
+3. Run prisma db pull to turn your database schema into a Prisma schema.      
+4. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+
+
+npx prisma migrate reset
+
+npx prisma generate
+
+npx prisma db push
+
+
+npm i axios
+npm i react-hot-toast
+
+npm install next-themes
+
+npx shadcn-ui@latest add separator
+
+npx shadcn-ui@latest add select
+
+npx shadcn-ui@latest add dropdown-menu
+
+npm install date-fns
+
+npm install react-spinners
+npx shadcn-ui@latest add table
+npm install @tanstack/react-table
+npx shadcn-ui@latest add table
+
+npx shadcn-ui@latest add command
+npx shadcn-ui@latest add popover
+npx shadcn-ui@latest add card
+npx shadcn-ui@latest add avatar
+npm install recharts
+npx shadcn-ui@latest add alert
+npx shadcn-ui@latest add checkbox
+npx shadcn-ui@latest add badge
+
+npm install next-cloudinary
+npm install stripe
