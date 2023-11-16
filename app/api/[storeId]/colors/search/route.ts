@@ -27,7 +27,7 @@ export async function GET(
                 }
             },
         });
-        console.log('Search:' + searchValue)
+    
         return NextResponse.json(colors);
      
     } catch (error) {

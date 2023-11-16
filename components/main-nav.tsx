@@ -53,16 +53,7 @@ export function MainNav({
       label: 'Orders',
       active: pathname === `/${params.storeId}/orders`,
     },
-    {
-      href: `/${params.storeId}/ondelivery`,
-      label: 'OnDelivery',
-      active: pathname === `/${params.storeId}/ondelivery`,
-    },
-    {
-      href: `/${params.storeId}/messages`,
-      label: 'Messages',
-      active: pathname === `/${params.storeId}/messages`,
-    },
+
 
     {
       href: `/${params.storeId}/settings`,
