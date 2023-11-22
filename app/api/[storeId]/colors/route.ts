@@ -56,24 +56,27 @@ export async function POST(
   }
 };
 
-export async function GET(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
+export async function GET(req: Request, { params }: { params: { storeId: string } }) {
   try {
-    if (!params.storeId) {
-      return new NextResponse("Store id is required", { status: 400 });
-    }
-
-    const colors = await prismadb.color.findMany({
-      where: {
-        storeId: params.storeId
+      if (!params.storeId) {
+          return new NextResponse("Store ID is required", { status: 400 });
       }
-    });
-  
-    return NextResponse.json(colors);
+      const { searchParams } = new URL(req.url);
+      const subcategoryId = searchParams.get("subcategoryId") || undefined;
+      const colors = await prismadb.color.findMany({
+          where: {
+              products: {
+                  some: {
+                      subcategoryId: subcategoryId,
+                  },
+              },
+              storeId: params.storeId,
+          },
+      });
+
+      return NextResponse.json(colors);
   } catch (error) {
-    console.log('[COLORS_GET]', error);
-    return new NextResponse("Internal error", { status: 500 });
+      console.log("[COLORS_GET]", error);
+      return new NextResponse("Internal error", { status: 500 });
   }
-};
+}

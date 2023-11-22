@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs';
-
+import Sidenav from '@/components/side-nav';
 import Navbar from '@/components/navbar'
 import prismadb from '@/lib/prismadb';
 
@@ -30,8 +30,12 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <Navbar />
-      {children}
+      <Sidenav />
+      <div >
+                <div className="p-0 sm:p-4 sm:pt-0 mt-10">
+                    {children}
+                </div>
+            </div>
     </>
   );
 };

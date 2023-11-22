@@ -24,7 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { AlertModal } from "@/components/modals/alert.modal"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,SelectGroup,SelectLabel} from "@/components/ui/select"
 import ImageUpload from "@/components/ui/image-upload"
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -38,7 +38,9 @@ const formSchema = z.object({
   colorId: z.string().min(1),
   sizeId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
-  isArchived: z.boolean().default(false).optional()
+  isArchived: z.boolean().default(false).optional(),
+  isOffered: z.boolean().default(false).optional(),
+  isUndercost: z.boolean().default(false).optional()
 });
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -85,6 +87,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     sizeId: '',
     isFeatured: false,
     isArchived: false,
+    isOffered: false,
+    isUndercost: false,
   }
 
   const form = useForm<ProductFormValues>({
@@ -230,72 +234,79 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="subcategoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Subcategory</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a subcategory" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {subcategories.map((subcategory) => (
-                        <SelectItem key={subcategory.id} value={subcategory.id}>{subcategory.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="sizeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Size</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a size" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {sizes.map((size) => (
-                        <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="colorId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a color" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {colors.map((color) => (
-                        <SelectItem key={color.id} value={color.id}>{color.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+           <FormField
+  control={form.control}
+  name="subcategoryId"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Subcategory</FormLabel>
+      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue defaultValue={field.value} placeholder="Select a subcategory" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          {subcategories.map((subcategory) => (
+            <SelectItem key={subcategory.id} value={subcategory.id}>{subcategory.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+          
+  
+          <FormField
+  control={form.control}
+  name="sizeId"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Size</FormLabel>
+      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue defaultValue={field.value} placeholder="Select a size" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          <SelectGroup>
+            <SelectLabel>Sizes</SelectLabel>
+            {sizes.map((size) => (
+              <SelectItem key={size.id} value={size.id}>{size.name}</SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+  
+<FormField
+  control={form.control}
+  name="colorId"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Color</FormLabel>
+      <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue defaultValue={field.value} placeholder="Select a color" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          {colors.map((color) => (
+            <SelectItem key={color.id} value={color.id}>{color.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
             <FormField
               control={form.control}
               name="isFeatured"
@@ -337,6 +348,52 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </FormLabel>
                     <FormDescription>
                       This product will not appear anywhere in the store.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="isOffered"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Offered
+                    </FormLabel>
+                    <FormDescription>
+                      This product will  appear in offer section of the store.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="isUndercost"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Undercost
+                    </FormLabel>
+                    <FormDescription>
+                      This product will appear in under-cost section of the store.
                     </FormDescription>
                   </div>
                 </FormItem>
