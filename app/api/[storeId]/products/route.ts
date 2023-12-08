@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, description, price,  categoryId, subcategoryId, colorId, sizeId, images, isFeatured, isArchived } = body;
+    const { name, description, price,  categoryId, subcategoryId, colorId, sizeId, images, isFeatured, isArchived, isOffered, isUndercost } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -70,6 +70,8 @@ export async function POST(
         price,
         isFeatured,
         isArchived,
+        isOffered,
+        isUndercost,
         categoryId,
         subcategoryId,
         colorId,
@@ -106,6 +108,8 @@ export async function GET(
     const colorId = searchParams.get('colorId') || undefined;
     const sizeId = searchParams.get('sizeId') || undefined;
     const isFeatured = searchParams.get('isFeatured');
+    const isOffered = searchParams.get('isOffered');
+    const isUndercost = searchParams.get('isUndercost');
      console.log("Search:"+searchValue)
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -123,6 +127,8 @@ export async function GET(
         colorId,
         sizeId,
         isFeatured: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
+        isOffered: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
+        isUndercost: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
         isArchived: false,
       },
       include: {
