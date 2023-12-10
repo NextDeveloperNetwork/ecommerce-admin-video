@@ -127,8 +127,8 @@ export async function GET(
         colorId,
         sizeId,
         isFeatured: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
-        isOffered: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
-        isUndercost: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
+        isOffered: isOffered ? true : undefined ,// we dont pass false so it ignores this clause
+        isUndercost: isUndercost ? true : undefined ,// we dont pass false so it ignores this clause
         isArchived: false,
       },
       include: {
