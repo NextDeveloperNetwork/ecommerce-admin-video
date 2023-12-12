@@ -10,19 +10,21 @@ datasource db {
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
-model Store{
-  id String            @id @default(uuid())
-  name  String
-  userId String
-  billboards      Billboard[]    @relation("StoreToBillboard")
-  categories      Category[] @relation("StoreToCategory")
-  subcategories   Subcategory[] @relation("StoreToSubcategory")
-  products        Product[]  @relation("StoreToProduct")
-  sizes           Size[]     @relation("StoreToSize")
-  color           Color[]     @relation("StoreToColor")
-  orders          Order[]     @relation("StoreToOrder")
-  createdAt DateTime        @default(now())
-  updatedAt DateTime           @updatedAt
+model Store {
+  id             String       @id @default(uuid())
+  name           String
+  userId         String
+  billboards     Billboard[]    @relation("StoreToBillboard")
+  categories     Category[]     @relation("StoreToCategory")
+  subcategories  Subcategory[]  @relation("StoreToSubcategory")
+  products       Product[]      @relation("StoreToProduct")
+  comments       Comment[]      @relation("StoreToComment")
+  sizes          Size[]         @relation("StoreToSize")
+  color          Color[]        @relation("StoreToColor")
+  orders         Order[]        @relation("StoreToOrder")
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model Billboard {
@@ -86,7 +88,7 @@ model Product {
   price       Decimal
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
-  isOffered  Boolean   @default(false)
+  isOffered   Boolean   @default(false)
   isUndercost Boolean   @default(false)
   sizeId      String    // Foreign Key to Size
   size        Size      @relation(fields: [sizeId], references: [id])
@@ -94,6 +96,7 @@ model Product {
   color       Color     @relation(fields: [colorId], references: [id])
   images      Image[]   // Relation to Image model
   orderItems  OrderItem[]   // Relation to Order model
+  comments      Comment[]   
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -107,6 +110,7 @@ model Order {
   id        String    @id @default(uuid())
   storeId     String    // Foreign Key to Store
   store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+  clientUserId String
   orderItems OrderItem[] // Relation to OrderItem model
   isPaid     Boolean   @default(false)
   phone      String    @default("")
@@ -161,4 +165,31 @@ model Image {
   updatedAt   DateTime @updatedAt
 
   @@index([productId])
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  storeId     String      // Foreign Key to Store
+  store       Store       @relation("StoreToComment", fields: [storeId], references: [id])
+  userId      String      // Foreign Key to User
+  user        User        @relation(fields: [userId], references: [externalId])
+  productId   String      // Foreign Key to Product
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rate        Decimal
+  message     String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([storeId])
+  @@index([userId])
+  @@index([productId])
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  externalId  String    @unique
+  attributes  Json
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
 }
