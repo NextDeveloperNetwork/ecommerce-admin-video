@@ -110,7 +110,6 @@ model Order {
   id        String    @id @default(uuid())
   storeId     String    // Foreign Key to Store
   store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
-  clientUserId String
   orderItems OrderItem[] // Relation to OrderItem model
   isPaid     Boolean   @default(false)
   phone      String    @default("")
