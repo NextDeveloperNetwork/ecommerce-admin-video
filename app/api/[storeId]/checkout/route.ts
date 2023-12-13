@@ -12,16 +12,13 @@ const corsHeaders = {
 
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
-  
 }
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string, externalId: string } }
+  { params }: { params: { storeId: string } }
 ) {
   const { productIds } = await req.json();
-
-  console.log("Got a call")
 
   if (!productIds || productIds.length === 0) {
     return new NextResponse("Product ids are required", { status: 400 });
@@ -62,8 +59,7 @@ export async function POST(
             }
           }
         }))
-      },
-      userId: params.externalId
+      }
     }
   });
 
