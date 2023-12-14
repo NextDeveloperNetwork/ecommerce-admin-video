@@ -115,14 +115,13 @@ model Order {
   phone      String    @default("")
   address    String    @default("")
   
-  userId     String    @default("")
-  user       User      @relation("UserToOrder", fields: [userId], references: [externalId])
+
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   @@index([storeId])
-  @@index([userId])
+
 }
 
 // Intermediary for a many-to-many relationship
@@ -195,7 +194,6 @@ model User {
   attributes  Json
   
   comments    Comment[]
-  orders      Order[]   @relation("UserToOrder")
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
