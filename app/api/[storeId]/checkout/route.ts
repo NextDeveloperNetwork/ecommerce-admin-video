@@ -46,6 +46,38 @@ export async function POST(
       }
     });
   });
+  const deliveryCost = 300;
+  const totalPrice = line_items.reduce((total, item) => {
+    // Check if unit_amount is defined before adding it to the total
+    const unitAmount = item.price_data?.unit_amount;
+    return total + (unitAmount !== undefined ? unitAmount : 0);
+  }, 0) / 100;
+  
+  // Conditionally set the delivery cost based on the total price
+  const adjustedDeliveryCost = totalPrice > 3999 ? 0 : deliveryCost;
+  
+  // Add delivery cost as a separate line item
+  line_items.push({
+    quantity: 1,
+    price_data: {
+      currency: 'ALL',
+      product_data: {
+        name: 'Delivery Cost',
+      },
+      unit_amount: adjustedDeliveryCost * 100,
+    },
+  });
+ 
+  line_items.push({
+    quantity: 1,
+    price_data: {
+      currency: 'ALL',
+      product_data: {
+        name: 'Delivery Cost',
+      },
+      unit_amount: deliveryCost * 100,
+    },
+  });
 
   const order = await prismadb.order.create({
     data: {
