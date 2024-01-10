@@ -137,6 +137,7 @@ export async function GET(
         subcategory: true,
         color: true,
         size: true,
+        comments: true
       },
       orderBy: {
         createdAt: 'desc',

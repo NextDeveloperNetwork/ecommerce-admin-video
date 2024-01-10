@@ -18,13 +18,15 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds } = await req.json();
+  const { products } = await req.json();
 
-  if (!productIds || productIds.length === 0) {
+  if (!products || products.length === 0) {
     return new NextResponse("Product ids are required", { status: 400 });
   }
 
-  const products = await prismadb.product.findMany({
+  const productIds = products.map((item : {id : string, quantity: number}) => item.id);
+
+  const productsExisting = await prismadb.product.findMany({
     where: {
       id: {
         in: productIds
@@ -35,9 +37,9 @@ export async function POST(
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
   const deliveryCost = 300;
-  products.forEach((product) => {
+  productsExisting.forEach((product) => {
     line_items.push({
-      quantity: 1,
+      quantity: products.filter((item : {id : string, quantity: number}) => item.id === product.id).quantity ,
       price_data: {
         currency: 'ALL',
         product_data: {
@@ -52,11 +54,9 @@ export async function POST(
     const unitAmount = item.price_data?.unit_amount;
     return total + (unitAmount !== undefined ? unitAmount : 0);
   }, 0) / 100;
-  
-  // Conditionally set the delivery cost based on the total price
+
   const adjustedDeliveryCost = totalPrice > 3999 ? 0 : deliveryCost;
   
-  // Add delivery cost as a single line item
   line_items.push({
     quantity: 1,
     price_data: {

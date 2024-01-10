@@ -62,7 +62,7 @@ export async function GET(
 ) {
   try {
 
-    prismadb.order.deleteMany({})
+    //prismadb.order.deleteMany({})
 
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -71,6 +71,9 @@ export async function GET(
     const categories = await prismadb.category.findMany({
       where: {
         storeId: params.storeId
+      },
+      include: {
+        subcategories: true
       }
     });
   
