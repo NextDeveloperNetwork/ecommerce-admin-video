@@ -30,6 +30,7 @@ const ProductsPage = async ({
     id: item.id,
     name: item.name,
     description: item.description,
+    quantity: item.quantity,
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     isOffered: item.isOffered,
