@@ -18,16 +18,18 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds,clientUserId } = await req.json();
+  const { productsBought, clientUserId } = await req.json();
 
-  if (!productIds || productIds.length === 0) {
+
+
+  if (!productsBought || productsBought.length === 0) {
     return new NextResponse("Product ids are required", { status: 400 });
   }
 
   const products = await prismadb.product.findMany({
     where: {
       id: {
-        in: productIds
+        in: productsBought.map((p: {id: string, quantity: number}) => p.id)
       }
     }
   });
@@ -38,20 +40,30 @@ export async function POST(
 
   const deliveryCost = 300;
   products.forEach((product) => {
+    let quantity = productsBought.find((p: {id: string, quantity: number}) => p.id === product.id).quantity
+    console.log("================")
+    console.log("Name: " + product.name)
+    console.log("Quantity: " + quantity)
+    console.log("Price: " + product.price.toNumber())
+    let total = product.price.toNumber() * quantity;
+    console.log("Total: " + total)
+    console.log("================")
+
     line_items.push({
-        quantity: product.quantity, // Use the quantity from the product object
+        quantity: quantity, // Use the quantity from the product object
         price_data: {
             currency: 'ALL',
             product_data: {
                 name: product.name,
             },
-            unit_amount: ( product.price.toNumber() * 100 ) * product.quantity
+            unit_amount: product.price.toNumber() * 100
         }
     });
 });
+
   
   const totalPrice = line_items.reduce((total, item) => {
-    const unitAmount = item.price_data?.unit_amount;
+    const unitAmount = (item.price_data?.unit_amount ?? 1) * (item?.quantity ?? 1);
     return total + (unitAmount !== undefined ? unitAmount : 0);
   }, 0) / 100;
 
@@ -67,18 +79,17 @@ export async function POST(
       unit_amount: adjustedDeliveryCost * 100,
     },
   });
-  
- 
+
 
   const order = await prismadb.order.create({
     data: {
       storeId: params.storeId,
       isPaid: false,
       orderItems: {
-        create: productIds.map((productId: string) => ({
+        create: productsBought.map((p: {id: string, quantity: number}) => ({
           product: {
             connect: {
-              id: productId
+              id: p.id
             }
           }
         }))
@@ -103,4 +114,5 @@ export async function POST(
   return NextResponse.json({ url: session.url }, {
     headers: corsHeaders
   });
+
 };
