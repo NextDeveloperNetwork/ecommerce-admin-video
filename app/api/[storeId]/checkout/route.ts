@@ -39,16 +39,16 @@ export async function POST(
   const deliveryCost = 300;
   products.forEach((product) => {
     line_items.push({
-      quantity: 1,
-      price_data: {
-        currency: 'ALL',
-        product_data: {
-          name: product.name,
-        },
-        unit_amount: product.price.toNumber() * 100 
-      }
+        quantity: product.quantity, // Use the quantity from the product object
+        price_data: {
+            currency: 'ALL',
+            product_data: {
+                name: product.name,
+            },
+            unit_amount: ( product.price.toNumber() * 100 ) * product.quantity
+        }
     });
-  }); 
+});
   
   const totalPrice = line_items.reduce((total, item) => {
     const unitAmount = item.price_data?.unit_amount;
