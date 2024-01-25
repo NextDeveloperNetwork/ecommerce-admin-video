@@ -115,7 +115,9 @@ model Order {
   isPaid     Boolean   @default(false)
   phone      String    @default("")
   address    String    @default("")
-  
+
+  userId String
+  user User @relation(fields: [userId], references: [externalId])
 
 
   createdAt DateTime  @default(now())
@@ -123,6 +125,7 @@ model Order {
 
   @@index([storeId])
 
+  @@index([userId])
 }
 
 // Intermediary for a many-to-many relationship
@@ -195,6 +198,7 @@ model User {
   attributes  Json
   
   comments    Comment[]
+  orders Order[]
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
