@@ -12,47 +12,51 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, description, quantity, price,  categoryId, subcategoryId, colorId, sizeId, images, isFeatured, isArchived, isOffered, isUndercost } = body;
+    const { name, description, quantity, price,  categoryId, subcategoryId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
+
+    console.log("======================")
+    console.log(body)
+    console.log("======================")
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
     if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
+      return new NextResponse("Name is required", { status: 401 });
     }
     if (!description) {
-      return new NextResponse("Description is required", { status: 400 });
+      return new NextResponse("Description is required", { status: 402 });
     }
 
     if (!images || !images.length) {
-      return new NextResponse("Images are required", { status: 400 });
+      return new NextResponse("Images are required", { status: 403 });
     }
     if (!quantity) {
-      return new NextResponse("Quantity is required", { status: 400 });
+      return new NextResponse("Quantity is required", { status: 404 });
     }
 
     if (!price) {
-      return new NextResponse("Price is required", { status: 400 });
+      return new NextResponse("Price is required", { status: 405 });
     }
     
     if (!categoryId) {
-      return new NextResponse("Category id is required", { status: 400 });
+      return new NextResponse("Category id is required", { status: 406 });
     }
     if (!subcategoryId) {
-      return new NextResponse("Subcategory id is required", { status: 400 });
+      return new NextResponse("Subcategory id is required", { status: 407 });
     }
 
-    if (!colorId) {
-      return new NextResponse("Color id is required", { status: 400 });
+    if (!colors) {
+      return new NextResponse("Color id is required", { status: 408 });
     }
 
-    if (!sizeId) {
-      return new NextResponse("Size id is required", { status: 400 });
+    if (!sizes) {
+      return new NextResponse("Size id is required", { status: 409});
     }
 
     if (!params.storeId) {
-      return new NextResponse("Store id is required", { status: 400 });
+      return new NextResponse("Store id is required", { status: 410 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -67,7 +71,9 @@ export async function POST(
     }
 
     const product = await prismadb.product.create({
+     
       data: {
+        
         name,
         description,
         quantity,
@@ -78,8 +84,20 @@ export async function POST(
         isUndercost,
         categoryId,
         subcategoryId,
-        colorId,
-        sizeId,
+        colors: {
+          createMany: {
+            data: [
+              ...colors.map((color: string) => ({colorId: color})),
+            ],
+          },
+        },
+        sizes: {
+          createMany: {
+            data: [
+              ...sizes.map((size: string) => ({sizeId: size})),
+            ]
+          },
+        },
         storeId: params.storeId,
         images: {
           createMany: {
@@ -109,8 +127,8 @@ export async function GET(
     const categoryId = searchParams.get('categoryId') || undefined;
     const subcategoryId = searchParams.get('subcategoryId') || undefined;
     const searchValue = decodeURIComponent(searchParams.get('searchValue') || "") || undefined;
-    const colorId = searchParams.get('colorId') || undefined;
-    const sizeId = searchParams.get('sizeId') || undefined;
+    const color = searchParams.get('colors') ;
+    const size = searchParams.get('sizes') ;
     const isFeatured = searchParams.get('isFeatured');
     const isOffered = searchParams.get('isOffered');
     const isUndercost = searchParams.get('isUndercost');
@@ -128,8 +146,7 @@ export async function GET(
           },
         description,
         subcategoryId,
-        colorId,
-        sizeId,
+        
         isFeatured: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
         isOffered: isOffered ? true : undefined ,// we dont pass false so it ignores this clause
         isUndercost: isUndercost ? true : undefined ,// we dont pass false so it ignores this clause
@@ -139,8 +156,16 @@ export async function GET(
         images: true,
         category: true,
         subcategory: true,
-        color: true,
-        size: true,
+        colors: {
+          include: {
+            color: true
+          }
+        },
+        sizes: {
+          include: {
+            size: true
+          }
+        },
         comments: true
       },
       orderBy: {

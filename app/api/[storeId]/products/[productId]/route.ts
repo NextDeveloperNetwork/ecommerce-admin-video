@@ -20,11 +20,19 @@ export async function GET(
         images: true,
         category: true,
         subcategory: true,
-        size: true,
-        color: true,
+        sizes: {
+          include: {
+            size: true
+          }
+        },
+        colors: {
+          include: {
+            color: true
+          }
+        },
       }
     });
-  
+  console.log(product)
     return NextResponse.json(product);
   } catch (error) {
     console.log('[PRODUCT_GET]', error);
@@ -81,7 +89,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, description, quantity, price, categoryId, subcategoryId, images, colorId, sizeId, isFeatured, isArchived, isOffered, isUndercost} = body;
+    const { name, description, quantity, price, categoryId, subcategoryId, images, colors, sizes, isFeatured, isArchived, isOffered, isUndercost} = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -116,11 +124,11 @@ export async function PATCH(
       return new NextResponse("Subcategory id is required", { status: 400 });
     }
 
-    if (!colorId) {
+    if (!colors ) {
       return new NextResponse("Color id is required", { status: 400 });
     }
 
-    if (!sizeId) {
+    if (!sizes) {
       return new NextResponse("Size id is required", { status: 400 });
     }
 
@@ -146,8 +154,12 @@ export async function PATCH(
         price,
         categoryId,
         subcategoryId,
-        colorId,
-        sizeId,
+        colors: {
+          deleteMany: {},
+        },
+        sizes: {
+          deleteMany: {},
+        },
         images: {
           deleteMany: {},
         },
@@ -163,6 +175,20 @@ export async function PATCH(
         id: params.productId
       },
       data: {
+        colors: {
+          createMany: {
+            data: [
+              ...colors.map((color: string) => ({colorId: color})),
+            ],
+          },
+        },
+        sizes: {
+          createMany: {
+            data: [
+              ...sizes.map((size: string) => ({sizeId: size})),
+            ]
+          },
+        },
         images: {
           createMany: {
             data: [
@@ -179,4 +205,5 @@ export async function PATCH(
     return new NextResponse("Internal error", { status: 500 });
   }
 };
+
 
