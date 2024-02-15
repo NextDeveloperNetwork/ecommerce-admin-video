@@ -90,39 +90,58 @@ model Product {
   isArchived  Boolean   @default(false)
   isOffered   Boolean   @default(false)
   isUndercost Boolean   @default(false)
-  sizeId      String    // Foreign Key to Size
-  size        Size      @relation(fields: [sizeId], references: [id])
-  colorId     String    // Foreign Key to Color
-  color       Color     @relation(fields: [colorId], references: [id])
+  sizes ProductSizes[]
+  colors ProductColors[]
   images      Image[]   // Relation to Image model
   orderItems  OrderItem[]   // Relation to Order model
   comments      Comment[]   
   quantity      Int          @default(0)  // New field for quantity with a default value of 0
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
+  size       Size[]
+  color      Color[]
   @@index([storeId])
   @@index([categoryId])
   @@index([subcategoryId])
+
+}
+model ProductSizes {
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  size Size @relation(fields: [sizeId], references: [id])
+  sizeId String
+  @@id([productId, sizeId])
+  @@index([productId])
   @@index([sizeId])
+}
+
+model ProductColors {
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  color Color @relation(fields: [colorId], references: [id])
+  colorId String
+  @@id([productId, colorId])
+  @@index([productId])
   @@index([colorId])
 }
 model Order {
-  id        String    @id @default(uuid())
-  storeId     String    // Foreign Key to Store
-  store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+  id         String    @id @default(uuid())
+  storeId    String    // Foreign Key to Store
+  store      Store     @relation("StoreToOrder", fields: [storeId], references: [id])
   orderItems OrderItem[] // Relation to OrderItem model
   isPaid     Boolean   @default(false)
   phone      String    @default("")
   address    String    @default("")
-  
-
-
+  userId      String      // Foreign Key to User
+  user        User        @relation(fields: [userId], references: [externalId])
+  tracking    String @default("")
+  status    String @default("")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   @@index([storeId])
-
+  @@index([userId])
 }
 
 // Intermediary for a many-to-many relationship
@@ -132,7 +151,9 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   productId String  // Foreign Key to Product
   product   Product @relation(fields: [productId], references: [id])
-
+  metadata Json ///ADDED
+  color String  ///ADDED
+  size String   ///ADDED
   @@index([orderId])
   @@index([productId])
 }
@@ -146,6 +167,8 @@ model Size {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  productSizes ProductSizes[]
+
   @@index([storeId])
 }
 model Color {
@@ -154,6 +177,7 @@ model Color {
   store       Store    @relation("StoreToColor", fields: [storeId], references: [id])
   name        String
   value       String
+  productsColors    ProductColors[] 
   products    Product[] 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -193,9 +217,8 @@ model User {
   id          Int       @id @default(autoincrement())
   externalId  String    @unique
   attributes  Json
-  
   comments    Comment[]
-
+  orderItem   Order[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

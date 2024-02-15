@@ -18,7 +18,7 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productsBought, clientUserId } = await req.json();
+  const { productsBought, userId  } = await req.json();
 
 
 
@@ -40,25 +40,30 @@ export async function POST(
 
   const deliveryCost = 300;
   products.forEach((product) => {
-    let quantity = productsBought.find((p: {id: string, quantity: number}) => p.id === product.id).quantity
+    let cartProduct = productsBought.find((p: {id: string, quantity: number, color: string, size: string}) => p.id === product.id)
     console.log("================")
     console.log("Name: " + product.name)
-    console.log("Quantity: " + quantity)
+    console.log("Quantity: " + cartProduct.quantity)
     console.log("Price: " + product.price.toNumber())
-    let total = product.price.toNumber() * quantity;
+    let total = product.price.toNumber() * cartProduct.quantity;
     console.log("Total: " + total)
     console.log("================")
 
     line_items.push({
-        quantity: quantity, // Use the quantity from the product object
-        price_data: {
-            currency: 'ALL',
-            product_data: {
-                name: product.name,
-            },
-            unit_amount: product.price.toNumber() * 100
-        }
-    });
+      quantity: cartProduct.quantity, // Use the quantity from the product object
+      price_data: {
+          currency: 'ALL',
+          product_data: {
+              name: product.name,
+              metadata: {
+                color: cartProduct.color,
+                size: cartProduct.size,
+                quantity: cartProduct.quantity,
+              }
+          },
+          unit_amount: product.price.toNumber() * 100
+      }
+  });
 });
 
   
@@ -83,17 +88,24 @@ export async function POST(
 
   const order = await prismadb.order.create({
     data: {
+      userId,
       storeId: params.storeId,
       isPaid: false,
       orderItems: {
-        create: productsBought.map((p: {id: string, quantity: number}) => ({
+        create: productsBought.map((p: { id: string, quantity: number, color: string, size: string }) => ({
           product: {
             connect: {
-              id: p.id
-            }
-          }
-        }))
-      }
+              id: p.id,
+            },
+          },
+          color: p.color, // Include color property
+          size: p.size,   // Include size property
+          metadata: {     // You can add additional metadata if needed
+            quantity: p.quantity,
+          },
+        })),
+      },
+      
     }
   });
 

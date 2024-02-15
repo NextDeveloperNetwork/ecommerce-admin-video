@@ -5,6 +5,7 @@ import { formatter } from "@/lib/utils";
 
 import { OrderColumn } from "./components/columns"
 import { OrderClient } from "./components/client";
+import { OrderItem } from "@prisma/client";
 
 
 const OrdersPage = async ({
@@ -22,7 +23,8 @@ const OrdersPage = async ({
         include: {
           product: true
         }
-      }
+      },
+      user: true
     },
     orderBy: {
       createdAt: 'desc'
@@ -31,15 +33,32 @@ const OrdersPage = async ({
 
   const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,
-    phone: item.phone,
-    address: item.address,
-    products: item.orderItems.map((orderItem) => orderItem.product.name).join(', '),
+    user: item.user.externalId,
+    phone: item.phone|| "-",
+    address: item.address|| "-",
+    tracking: item.tracking || "-",
+    status: item.status || "-",
+    color: item.orderItems.map((orderItem) => orderItem.color).join(', '),
+    size: item.orderItems.map((orderItem) => orderItem.size).join(', '),
+    quantity: item.orderItems.map((orderItem) => {
+      const metadata = orderItem.metadata as { [key: string]: string };
+      return metadata["quantity"]
+    }).join(', '),
+    products: item.orderItems.map((orderItem) => {
+      const metadata = orderItem.metadata as { [key: string]: string };
+      return `${orderItem.product.name} (${metadata["quantity"]})`
+
+    }).join(', '),
     totalPrice: formatter.format(item.orderItems.reduce((total, item) => {
-      return total + Number(item.product.price)
-    }, 0)),
+      console.log("Orders", item.product.price)
+      const metadata = item.metadata as { [key: string]: string };
+      return total + Number(item.product.price) * Number(metadata["quantity"])
+    }, 0) ),
     isPaid: item.isPaid,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
+
+  console.log(formattedOrders)
 
   return (
     <div className="flex-col">

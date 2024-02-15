@@ -4,8 +4,14 @@ import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
 export type OrderColumn = {
   id: string;
+  user: string;
+  tracking:string;
+  status:string;
   phone: string;
   address: string;
+  color: string;
+  size: string;
+  quantity: string;
   isPaid: boolean;
   totalPrice: string;
   products: string;
@@ -18,6 +24,22 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Products",
   },
   {
+    accessorKey: "quantity",
+    header: "Quantity",
+  },
+  {
+    accessorKey: "user",
+    header: "User",
+  },
+  {
+    accessorKey: "tracking",
+    header: "Tracking.Nr",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
+  {
     accessorKey: "phone",
     header: "Phone",
   },
@@ -28,6 +50,14 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "totalPrice",
     header: "Total price",
+  },
+  {
+    accessorKey: "color",
+    header: "Color",
+  },
+  {
+    accessorKey: "size",
+    header: "Size",
   },
   {
     accessorKey: "isPaid",

@@ -28,18 +28,33 @@ const ProductPage = async ({
     },
   });
 
-  const sizes = await prismadb.size.findMany({
+  const sizes = await prismadb.productSizes.findMany({
     where: {
-      storeId: params.storeId,
+      productId: params.productId,
+    },
+    include: {
+      size: true
+    }
+  });
+   
+
+  const colors = await prismadb.productColors.findMany({
+    where: {
+      productId: params.productId,
+    },
+    include: {
+      color: true
+    }
+  });
+  const defaultColors = await prismadb.color.findMany ({
+    where: {      storeId: params.storeId,
     },
   });
 
-  const colors = await prismadb.color.findMany({
-    where: {
-      storeId: params.storeId,
+  const defaultSizes = await prismadb.size.findMany ({
+    where: {      storeId: params.storeId,
     },
   });
-
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
@@ -48,6 +63,8 @@ const ProductPage = async ({
           categories={categories} 
           colors={colors}
           sizes={sizes}
+          defaultColors={defaultColors}
+          defaultSizes={defaultSizes}
           initialData={product}
         />
       </div>
