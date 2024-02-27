@@ -18,11 +18,16 @@ const CategoryPage = async ({
       storeId: params.storeId
     }
   });
+  const icons = await prismadb.icon.findMany({
+    where: {
+      storeId: params.storeId
+    }
+  });
 
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <CategoryForm billboards={billboards} initialData={category} />
+        <CategoryForm billboards={billboards} icons={icons} initialData={category} />
       </div>
     </div>
   );

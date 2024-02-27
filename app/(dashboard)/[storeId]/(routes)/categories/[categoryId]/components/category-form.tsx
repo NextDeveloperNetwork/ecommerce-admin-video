@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Billboard, Category } from "@prisma/client"
+import { Billboard, Category ,Icon} from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -28,6 +28,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const formSchema = z.object({
   name: z.string().min(2),
   billboardId: z.string().min(1),
+  iconId: z.string().min(1),
 });
 
 type CategoryFormValues = z.infer<typeof formSchema>
@@ -35,11 +36,13 @@ type CategoryFormValues = z.infer<typeof formSchema>
 interface CategoryFormProps {
   initialData: Category | null;
   billboards: Billboard[];
+  icons: Icon[];
 };
 
 export const CategoryForm: React.FC<CategoryFormProps> = ({
   initialData,
-  billboards
+  billboards,
+  icons,
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -57,6 +60,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     defaultValues: initialData || {
       name: '',
       billboardId: '',
+      iconId: '',
     }
   });
 
@@ -146,6 +150,28 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                     <SelectContent>
                       {billboards.map((billboard) => (
                         <SelectItem key={billboard.id} value={billboard.id}>{billboard.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="iconId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Icon</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select an Icon" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {icons.map((icon) => (
+                        <SelectItem key={icon.id} value={icon.id}>{icon.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

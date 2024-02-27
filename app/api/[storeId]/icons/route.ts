@@ -12,21 +12,18 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, billboardId, iconId } = body;
+    const { label, imageUrl } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
+    if (!label) {
+      return new NextResponse("Label is required", { status: 400 });
     }
-    
-    if (!billboardId) {
-      return new NextResponse("Billboard ID is required", { status: 400 });
-    }
-    if (!iconId) {
-      return new NextResponse("Icon ID is required", { status: 400 });
+
+    if (!imageUrl) {
+      return new NextResponse("Image URL is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -41,21 +38,20 @@ export async function POST(
     });
 
     if (!storeByUserId) {
-      return new NextResponse("Unauthorized", { status: 405 });
+      return new NextResponse("Unauthorized", { status: 403 });
     }
 
-    const category = await prismadb.category.create({
+    const icon = await prismadb.icon.create({
       data: {
-        name,
-        billboardId,
-        iconId,
+        label,
+        imageUrl,
         storeId: params.storeId,
       }
     });
   
-    return NextResponse.json(category);
+    return NextResponse.json(icon);
   } catch (error) {
-    console.log('[CATEGORIES_POST]', error);
+    console.log('[ICON_POST]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -65,25 +61,19 @@ export async function GET(
   { params }: { params: { storeId: string } }
 ) {
   try {
-
-    //prismadb.order.deleteMany({})
-
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
     }
 
-    const categories = await prismadb.category.findMany({
+    const icons = await prismadb.icon.findMany({
       where: {
         storeId: params.storeId
-      },
-      include: {
-        subcategories: true
       }
     });
   
-    return NextResponse.json(categories);
+    return NextResponse.json(icons);
   } catch (error) {
-    console.log('[CATEGORIES_GET]', error);
+    console.log('[ICONS_GET]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
