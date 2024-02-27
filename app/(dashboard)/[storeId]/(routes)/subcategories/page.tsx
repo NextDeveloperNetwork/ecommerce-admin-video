@@ -17,6 +17,7 @@ const SubCategoriesPage = async ({
     include: {
       category: true,
       billboard: true,
+      icon: true,
     },
     orderBy: {
       createdAt: 'desc'
@@ -28,6 +29,7 @@ const SubCategoriesPage = async ({
     name: item.name,
     category: item.category.name,
     billboardLabel: item.billboard.label,
+    iconLabel: item.icon.label,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
 

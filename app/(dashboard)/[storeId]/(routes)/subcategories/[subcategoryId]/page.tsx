@@ -22,11 +22,15 @@ const SubCategoryPage = async ({
       storeId: params.storeId
     }
   });
-
+  const icons = await prismadb.icon.findMany({
+    where: {
+      storeId: params.storeId
+    }
+  });
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SubCategoryForm billboards={billboards} categories={categories} initialData={subcategory} />
+        <SubCategoryForm billboards={billboards} icons={icons} categories={categories} initialData={subcategory} />
       </div>
     </div>
   );

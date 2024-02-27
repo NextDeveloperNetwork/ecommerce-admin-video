@@ -9,6 +9,7 @@ export type SubCategoryColumn = {
   name: string;
   category: string;
   billboardLabel: string;
+  iconLabel: string ;
   createdAt: string;
 }
 
@@ -25,6 +26,11 @@ export const columns: ColumnDef<SubCategoryColumn>[] = [
     accessorKey: "billboard",
     header: "Billboard",
     cell: ({ row }) => row.original.billboardLabel,
+  },
+  {
+    accessorKey: "icon",
+    header: "Icon",
+    cell: ({ row }) => row.original.iconLabel,
   },
   {
     accessorKey: "createdAt",

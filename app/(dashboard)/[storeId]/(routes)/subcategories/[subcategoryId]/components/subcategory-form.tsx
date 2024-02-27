@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Billboard, Subcategory, Category } from "@prisma/client"
+import { Billboard, Subcategory, Category,Icon} from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -29,6 +29,7 @@ const formSchema = z.object({
   name: z.string().min(2),
   categoryId: z.string().min(1),
   billboardId: z.string().min(1),
+  iconId: z.string().min(1),
 });
 
 type SubCategoryFormValues = z.infer<typeof formSchema>
@@ -37,12 +38,14 @@ interface SubCategoryFormProps {
   initialData: Subcategory | null;
   categories: Category[];
   billboards: Billboard[];
+  icons:Icon[];
 };
 
 export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
   initialData,
   categories,
-  billboards
+  billboards,
+  icons,
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -61,7 +64,7 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       name: '',
       categoryId: '',
       billboardId: '',
-
+      iconId: '',
     }
   });
 
@@ -173,6 +176,28 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
                     <SelectContent>
                       {billboards.map((billboard) => (
                         <SelectItem key={billboard.id} value={billboard.id}>{billboard.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="iconId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Icon</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select an icon" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {icons.map((icon) => (
+                        <SelectItem key={icon.id} value={icon.id}>{icon.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
