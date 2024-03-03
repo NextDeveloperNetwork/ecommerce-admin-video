@@ -14,9 +14,9 @@ const heads={
     "svix-signature": headersList.get("svix-signature"),
 }
 const wh =new Webhook(webhookSecret)
-let evt:Event|null=null;
+let msg:Event|null=null;
 try {
-    evt =wh.verify(JSON.stringify(payload),
+    msg =wh.verify(JSON.stringify(payload),
     heads as IncomingHttpHeaders & WebhookRequiredHeaders
     )as Event;
 } catch (error) {
@@ -24,9 +24,9 @@ try {
 
     return NextResponse.json({},{status:400})
 }
-const eventType: EventType=evt.type;
+const eventType: EventType=msg.type;
 if (eventType==="user.created"|| eventType === "user.updated"){
-    const {id, ...attributes}=evt.data;
+    const {id, ...attributes}=msg.data;
     
     await prismadb.user.upsert({ 
         where:{externalId:id as string},
