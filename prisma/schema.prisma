@@ -180,8 +180,8 @@ model Order {
   isPaid     Boolean   @default(false)
   phone      String    @default("")
   address    String    @default("")
-  userId      String?      // Foreign Key to User
-  user        User?     @relation(fields: [userId], references: [externalId])
+  userId      String      // Foreign Key to User
+  user        User     @relation(fields: [userId], references: [externalId])
   tracking    String @default("")
   status    String @default("")
   createdAt DateTime  @default(now())
