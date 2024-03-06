@@ -37,8 +37,9 @@ if (eventType==="user.created"|| eventType === "user.updated"){
         update:{attributes}
     })
 }
-
+return NextResponse.json({ success: true });  //added this one 
 }
+
 type EventType="user.created"|"user.updated"|"#";
 type Event={
     data:Record<string, string|number>,
