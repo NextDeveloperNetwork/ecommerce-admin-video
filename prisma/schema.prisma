@@ -6,9 +6,9 @@ generator client {
 }
 
 datasource db {
- provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 model Store {
   id             String       @id @default(uuid())
@@ -103,6 +103,7 @@ model Product {
   subcategory   Subcategory @relation("SubcategoryToProduct", fields: [subcategoryId], references: [id])
   name        String
   description String
+  link        String
   price       Decimal
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
