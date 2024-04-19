@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, description, link, quantity, price,  categoryId, subcategoryId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
+    const { name, description, info, link, quantity, price,  categoryId, subcategoryId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
 
     console.log("======================")
     console.log(body)
@@ -27,6 +27,9 @@ export async function POST(
     }
     if (!description) {
       return new NextResponse("Description is required", { status: 402 });
+    }
+    if (!info) {
+      return new NextResponse("Info is required", { status: 402 });
     }
     if (!link) {
       return new NextResponse("Paypal Link is required", { status: 402 });
@@ -79,6 +82,7 @@ export async function POST(
         
         name,
         description,
+        info,
         link,
         quantity,
         price,
@@ -128,10 +132,11 @@ export async function GET(
     const { searchParams } = new URL(req.url)
     const name= searchParams.get(' name') || undefined;
     const description= searchParams.get('description') || undefined;
+    const info= searchParams.get('info') || undefined;
     const link= searchParams.get('link') || undefined;
     const categoryId = searchParams.get('categoryId') || undefined;
     const subcategoryId = searchParams.get('subcategoryId') || undefined;
-    const searchValue = decodeURIComponent(searchParams.get('searchValue') || "") || undefined;
+    const searchValue = decodeURIComponent(searchParams.get('searchValue') || "").toUpperCase() || undefined;
     const color = searchParams.get('colors') ;
     const size = searchParams.get('sizes') ;
     const isFeatured = searchParams.get('isFeatured');
@@ -150,6 +155,7 @@ export async function GET(
             contains: searchValue
           },
         description,
+        info,
         link,
         subcategoryId,
       

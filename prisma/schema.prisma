@@ -103,6 +103,7 @@ model Product {
   subcategory   Subcategory @relation("SubcategoryToProduct", fields: [subcategoryId], references: [id])
   name        String
   description String
+  info        String 
   link        String
   price       Decimal
   isFeatured  Boolean   @default(false)
