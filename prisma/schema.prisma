@@ -15,15 +15,16 @@ model Store {
   name           String
   userId         String
   billboards     Billboard[]    @relation("StoreToBillboard")
-  icons    Icon[]    @relation("StoreToIcon")
+  icons          Icon[]    @relation("StoreToIcon")
   categories     Category[]     @relation("StoreToCategory")
   subcategories  Subcategory[]  @relation("StoreToSubcategory")
+  subsub         Subsub[]               @relation("StoreToSubsub")
   products       Product[]      @relation("StoreToProduct")
   comments       Comment[]      @relation("StoreToComment")
   sizes          Size[]         @relation("StoreToSize")
   color          Color[]        @relation("StoreToColor")
   orders         Order[]        @relation("StoreToOrder")
-  spec       Spec[]             @relation("StoreToSpec")
+  spec           Spec[]             @relation("StoreToSpec")
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 }
@@ -36,6 +37,7 @@ model Billboard {
   imageUrl  String
   categories  Category[]
   subcategories Subcategory[]
+  subsub Subsub[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([storeId])
@@ -48,6 +50,7 @@ model Icon {
   imageUrl  String
   categories  Category[]
   subcategories Subcategory[]
+  subsub    Subsub[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([storeId])
@@ -83,6 +86,7 @@ model Subcategory {
   categoryId   String        // Foreign Key to Category
   category     Category      @relation("CategoryToSubcategory",fields: [categoryId], references: [id])
   products     Product[]     @relation("SubcategoryToProduct")
+  subsub       Subsub[]      @relation("SubcategoryToSubsub")
   name         String
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -92,6 +96,25 @@ model Subcategory {
   @@index([billboardId])
   @@index([iconId])
 }
+model Subsub {
+  id           String        @id @default(uuid())
+  storeId      String        // Foreign Key to Store
+  store        Store         @relation("StoreToSubsub", fields: [storeId], references: [id])
+  billboardId  String        // Foreign Key to Billboard
+  billboard    Billboard     @relation(fields: [billboardId], references: [id])
+  iconId       String       // Update the type to allow for null
+  icon         Icon         @relation(fields: [iconId], references: [id])
+  subcategoryId   String        // Foreign Key to Category
+  subcategory     Subcategory      @relation("SubcategoryToSubsub",fields: [subcategoryId], references: [id])
+  products     Product[]     @relation("SubsubToProduct")
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  @@index([storeId])
+  @@index([billboardId])
+  @@index([iconId])
+}
+
 
 model Product {
   id          String    @id @default(uuid())
@@ -101,6 +124,8 @@ model Product {
   category    Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
   subcategoryId  String    // Foreign Key to Category
   subcategory   Subcategory @relation("SubcategoryToProduct", fields: [subcategoryId], references: [id])
+  subsubId    String @default("913d6aca-5f21-4a40-8c91-05a2a3050ad3")
+  subsub  Subsub @relation("SubsubToProduct", fields: [subsubId], references: [id])
   name        String
   description String
   info        String 
@@ -125,7 +150,7 @@ model Product {
   @@index([storeId])
   @@index([categoryId])
   @@index([subcategoryId])
-
+  @@index([subsubId])
 }
 
 model Spec {

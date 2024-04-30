@@ -12,7 +12,7 @@ export type ProductColumn = {
   price: string;
   category: string;
   subcategory: string;
-
+  subsub: string;
   createdAt: string;
   isFeatured: boolean;
   isArchived: boolean;
@@ -59,7 +59,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "subcategory",
     header: "Subcategory",
   },
-
+  {
+    accessorKey: "subsub",
+    header: "Subsub",
+  },
   {
     accessorKey: "createdAt",
     header: "Date",

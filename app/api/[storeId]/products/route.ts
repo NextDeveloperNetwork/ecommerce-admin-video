@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, description, info, link, quantity, price,  categoryId, subcategoryId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
+    const { name, description, info, link, quantity, price,  categoryId, subcategoryId, subsubId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
 
     console.log("======================")
     console.log(body)
@@ -52,7 +52,9 @@ export async function POST(
     if (!subcategoryId) {
       return new NextResponse("Subcategory id is required", { status: 407 });
     }
-
+    if (!subsubId) {
+      return new NextResponse("Subcategory id is required", { status: 407 });
+    }
     if (!colors) {
       return new NextResponse("Color id is required", { status: 408 });
     }
@@ -92,6 +94,7 @@ export async function POST(
         isUndercost,
         categoryId,
         subcategoryId,
+        subsubId,
         colors: {
           createMany: {
             data: [
@@ -136,6 +139,7 @@ export async function GET(
     const link= searchParams.get('link') || undefined;
     const categoryId = searchParams.get('categoryId') || undefined;
     const subcategoryId = searchParams.get('subcategoryId') || undefined;
+    const subsubId = searchParams.get('subcategoryId') || undefined;
     const searchValue = decodeURIComponent(searchParams.get('searchValue') || "").toUpperCase() || undefined;
     const color = searchParams.get('colors') ;
     const size = searchParams.get('sizes') ;
@@ -158,7 +162,7 @@ export async function GET(
         info,
         link,
         subcategoryId,
-      
+      subsubId,
         isFeatured: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause
         isOffered: isOffered ? true : undefined ,// we dont pass false so it ignores this clause
         isUndercost: isUndercost ? true : undefined ,// we dont pass false so it ignores this clause

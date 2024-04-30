@@ -27,7 +27,11 @@ const ProductPage = async ({
       storeId: params.storeId,
     },
   });
-
+  const subsub = await prismadb.subsub.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
   const sizes = await prismadb.productSizes.findMany({
     where: {
       productId: params.productId,
@@ -61,6 +65,7 @@ const ProductPage = async ({
         <ProductForm 
           subcategories={subcategories}
           categories={categories} 
+          subsub={subsub} 
           colors={colors}
           sizes={sizes}
           defaultColors={defaultColors}

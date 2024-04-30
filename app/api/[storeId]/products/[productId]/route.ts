@@ -20,6 +20,7 @@ export async function GET(
         images: true,
         category: true,
         subcategory: true,
+        subsub: true,
         sizes: {
           include: {
             size: true
@@ -89,7 +90,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, description,info,link, quantity, price, categoryId, subcategoryId, images, colors, sizes, isFeatured, isArchived, isOffered, isUndercost} = body;
+    const { name, description,info,link, quantity, price, categoryId, subcategoryId,subsubId, images, colors, sizes, isFeatured, isArchived, isOffered, isUndercost} = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -129,7 +130,9 @@ export async function PATCH(
     if (!subcategoryId) {
       return new NextResponse("Subcategory id is required", { status: 400 });
     }
-
+    if (!subsubId) {
+      return new NextResponse("Subsub id is required", { status: 400 });
+    }
     if (!colors ) {
       return new NextResponse("Color id is required", { status: 400 });
     }
@@ -162,6 +165,7 @@ export async function PATCH(
         price,
         categoryId,
         subcategoryId,
+        subsubId,
         colors: {
           deleteMany: {},
         },

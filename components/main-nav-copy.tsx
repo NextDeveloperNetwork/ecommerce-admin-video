@@ -44,6 +44,12 @@ export function MainNav({
       active: pathname === `/${params.storeId}/subcategories`,
     },
     {
+      href: `/${params.storeId}/subsub`,
+      label: 'Subsub',
+      icon: <FaTags />,
+      active: pathname === `/${params.storeId}/subsub`,
+    },
+    {
       href: `/${params.storeId}/sizes`,
       label: 'Sizes',
       icon: <FaObjectGroup />,

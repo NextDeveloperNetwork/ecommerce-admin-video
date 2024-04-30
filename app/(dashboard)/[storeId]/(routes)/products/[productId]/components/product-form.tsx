@@ -16,6 +16,7 @@ import {
   ProductSizes,
   Size,
   Subcategory,
+  Subsub
 } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -54,6 +55,7 @@ const formSchema = z.object({
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
   subcategoryId: z.string().min(1),
+  subsubId: z.string().min(1),
   colors: z.array(z.string()),
   sizes: z.array(z.string()),
   quantity: z.coerce.number().min(0),
@@ -73,6 +75,7 @@ interface ProductFormProps {
     | null;
   categories: Category[];
   subcategories: Subcategory[];
+  subsub: Subsub[];
   colors: (ProductColors & { color: Color })[]
   sizes: (ProductSizes & { size: Size })[]
   defaultColors: Color[]
@@ -83,6 +86,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   initialData,
   categories,
   subcategories,
+  subsub,
   sizes,
   colors,
   defaultColors,
@@ -120,7 +124,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         quantity: 0,
         categoryId: "",
         subcategoryId: "",
-      
+        subsubId: "",
         sizes: [],
         colors: [],
         isFeatured: false,
@@ -401,7 +405,40 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-
+ <FormField
+              control={form.control}
+              name="subsubId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subsub</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a sub subcategory"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent
+                      style={{ maxHeight: "200px", overflowY: "auto" }}
+                    >
+                      {subsub.map((subsub) => (
+                        <SelectItem key={subsub.id} value={subsub.id}>
+                          {subsub.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 <FormField
     control={form.control}
     name="colors"

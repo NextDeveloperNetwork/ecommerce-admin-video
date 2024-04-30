@@ -16,6 +16,7 @@ const ProductsPage = async ({
       storeId: params.storeId
     },
     include: {
+      subsub:true,
       subcategory:true,
       category: true,
       sizes: true,
@@ -38,7 +39,7 @@ const ProductsPage = async ({
     price: formatter.format(item.price.toNumber()),
     category: item.category.name,
     subcategory: item.subcategory.name,
- 
+    subsub: item.subsub.name,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
 
