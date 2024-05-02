@@ -18,15 +18,17 @@ export async function GET(
         const sizes = await prismadb.size.findMany({
             where: {
                 storeId: params.storeId,
-                products: {
+                
+                productSizes: {
                     some: {
+                      product: {
                         name: {
                             contains: searchValue
                         }
                     }
                 }
             },
-        });
+        }});
      
         return NextResponse.json(sizes);
 

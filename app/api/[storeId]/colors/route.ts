@@ -64,14 +64,16 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
       const { searchParams } = new URL(req.url);
       const subcategoryId = searchParams.get("subcategoryId") || undefined;
       const colors = await prismadb.color.findMany({
-          where: {
-              products: {
-                  some: {
-                      subcategoryId: subcategoryId,
-                  },
+        where: {
+          productsColors: {
+            some: {
+              product: {
+                subcategoryId: subcategoryId,
               },
-              storeId: params.storeId,
+            },
           },
+          storeId: params.storeId,
+        },
       });
 
       return NextResponse.json(colors);

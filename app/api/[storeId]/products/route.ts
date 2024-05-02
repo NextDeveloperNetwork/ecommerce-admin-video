@@ -139,7 +139,7 @@ export async function GET(
     const link= searchParams.get('link') || undefined;
     const categoryId = searchParams.get('categoryId') || undefined;
     const subcategoryId = searchParams.get('subcategoryId') || undefined;
-    const subsubId = searchParams.get('subcategoryId') || undefined;
+    const subsubId = searchParams.get('subsubId') || undefined;
     const searchValue = decodeURIComponent(searchParams.get('searchValue') || "").toUpperCase() || undefined;
     const color = searchParams.get('colors') ;
     const size = searchParams.get('sizes') ;
@@ -172,6 +172,7 @@ export async function GET(
         images: true,
         category: true,
         subcategory: true,
+        subsub: true,
         colors: {
           include: {
             color: true

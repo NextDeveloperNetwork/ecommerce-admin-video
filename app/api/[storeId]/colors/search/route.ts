@@ -18,15 +18,16 @@ export async function GET(
         const colors = await prismadb.color.findMany({
             where: {
                 storeId: params.storeId,
-                products: {
+                productsColors: {
                     some: {
+                      product: {
                         name: {
                             contains: searchValue
                         }
                     }
                 }
             },
-        });
+        }});
     
         return NextResponse.json(colors);
      
