@@ -129,7 +129,6 @@ model Product {
   name        String
   description String
   info        String 
-  link        String
   price       Decimal
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)

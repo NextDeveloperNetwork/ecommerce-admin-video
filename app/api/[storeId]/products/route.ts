@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, description, info, link, quantity, price,  categoryId, subcategoryId, subsubId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
+    const { name, description, info, quantity, price,  categoryId, subcategoryId, subsubId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
 
     console.log("======================")
     console.log(body)
@@ -31,10 +31,7 @@ export async function POST(
     if (!info) {
       return new NextResponse("Info is required", { status: 402 });
     }
-    if (!link) {
-      return new NextResponse("Paypal Link is required", { status: 402 });
-    }
-
+ 
     if (!images || !images.length) {
       return new NextResponse("Images are required", { status: 403 });
     }
@@ -85,7 +82,6 @@ export async function POST(
         name,
         description,
         info,
-        link,
         quantity,
         price,
         isFeatured,
@@ -136,7 +132,6 @@ export async function GET(
     const name= searchParams.get(' name') || undefined;
     const description= searchParams.get('description') || undefined;
     const info= searchParams.get('info') || undefined;
-    const link= searchParams.get('link') || undefined;
     const categoryId = searchParams.get('categoryId') || undefined;
     const subcategoryId = searchParams.get('subcategoryId') || undefined;
     const subsubId = searchParams.get('subsubId') || undefined;
@@ -160,7 +155,7 @@ export async function GET(
           },
         description,
         info,
-        link,
+     
         subcategoryId,
       subsubId,
         isFeatured: isFeatured ? true : undefined ,// we dont pass false so it ignores this clause

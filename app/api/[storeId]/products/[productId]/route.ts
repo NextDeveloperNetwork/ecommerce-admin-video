@@ -90,7 +90,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, description,info,link, quantity, price, categoryId, subcategoryId,subsubId, images, colors, sizes, isFeatured, isArchived, isOffered, isUndercost} = body;
+    const { name, description,info,quantity, price, categoryId, subcategoryId,subsubId, images, colors, sizes, isFeatured, isArchived, isOffered, isUndercost} = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -109,10 +109,6 @@ export async function PATCH(
     if (!info) {
       return new NextResponse("Info is required", { status: 400 });
     }
-    if (!link) {
-      return new NextResponse("Link is required", { status: 400 });
-    }
-
     if (!images || !images.length) {
       return new NextResponse("Images are required", { status: 400 });
     }
@@ -160,7 +156,6 @@ export async function PATCH(
         name,
         description,
         info,
-        link,
         quantity,
         price,
         categoryId,
