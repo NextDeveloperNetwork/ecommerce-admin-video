@@ -18,16 +18,7 @@ export function MainNav({
       label: 'Overview',
       active: pathname === `/${params.storeId}`,
     },
-    {
-      href: `/${params.storeId}/billboards`,
-      label: 'Billboards',
-      active: pathname === `/${params.storeId}/billboards`,
-    },
-    {
-      href: `/${params.storeId}/icons`,
-      label: 'Icons',
-      active: pathname === `/${params.storeId}/icons`,
-    },
+ 
     {
       href: `/${params.storeId}/categories`,
       label: 'Categories',
@@ -39,13 +30,8 @@ export function MainNav({
       active: pathname === `/${params.storeId}/subcategories`,
     },
     {
-      href: `/${params.storeId}/sizes`,
-      label: 'Sizes',
-      active: pathname === `/${params.storeId}/sizes`,
-    },
-    {
-      href: `/${params.storeId}/colors`,
-      label: 'Colors',
+      href: `/${params.storeId}/subsub`,
+      label: 'Sub-SubCategory',
       active: pathname === `/${params.storeId}/colors`,
     },
     {
@@ -60,11 +46,7 @@ export function MainNav({
     },
 
 
-    {
-      href: `/${params.storeId}/settings`,
-      label: 'Settings',
-      active: pathname === `/${params.storeId}/settings`,
-    },
+   
   ]
 
   return (

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { FaHome, FaColumns, FaList, FaTags, FaObjectGroup, FaExpand, FaPalette, FaBox, FaClipboardList, FaCog } from 'react-icons/fa';
+import { FaHome, FaColumns, FaList, FaTags, FaObjectGroup, FaExpand, FaPalette, FaBox, FaClipboardList, FaCog, FaListOl, FaListUl, FaListAlt } from 'react-icons/fa';
 import { cn } from "@/lib/utils";
 
 export function MainNav({
@@ -40,13 +40,13 @@ export function MainNav({
     {
       href: `/${params.storeId}/subcategories`,
       label: 'Subcategories',
-      icon: <FaTags />,
+      icon: <FaListOl />,
       active: pathname === `/${params.storeId}/subcategories`,
     },
     {
       href: `/${params.storeId}/subsub`,
       label: 'Subsub',
-      icon: <FaTags />,
+      icon: <FaListOl />,
       active: pathname === `/${params.storeId}/subsub`,
     },
     {
