@@ -14,10 +14,6 @@ export async function POST(
 
     const { name, description, info, quantity, price,  categoryId, subcategoryId, subsubId, colors, sizes, images, isFeatured, isArchived, isOffered, isUndercost } = body;
 
-    console.log("======================")
-    console.log(body)
-    console.log("======================")
-
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
